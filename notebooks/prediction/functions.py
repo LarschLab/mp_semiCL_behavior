@@ -246,8 +246,13 @@ def polar_pixel_encoding(row, r_bins=20, theta_bins=36, max_radius=400):
             continue
 
         # Conversion en coordonnées polaires
-        r = np.sqrt(x**2 + y**2)
-        theta = np.arctan2(y, x) - fish_ori
+        dx = x - row["f_x"]
+        dy = y - row["f_y"]
+
+            # --- Absolute stimulus angle relative to fish ---
+        stim_angle = (np.arctan2(dy, dx) + 2 * np.pi) % (2 * np.pi)
+        r = np.sqrt(dx**2 + dy**2)
+        theta = (np.arctan2(dy, dx) + 2 * np.pi) % (2 * np.pi) - fish_ori
         theta = (theta + np.pi) % (2 * np.pi) - np.pi  # wrap [-π, π]
 
         # Binning
