@@ -92,15 +92,11 @@ d_ori = (d_ori - np.pi) % (2*np.pi)
 
 Here
 
-$$
-d\_{\text{ori\_rel}} = d\_{\text{ori}} - f\_{\text{ori}}
-$$
+$d\_{\text{ori\_rel}} = d\_{\text{ori}} - f\_{\text{ori}}$
 
 We want $d_{ori,\text{rel}}$ to be between 0 and $2\pi$, and increasing in the trigonometric sens to respect standard polar coordinates norm.
 
-$$
-d\_{\text{ori\_rel}} = 2\pi - d\_{\text{ori\_rel}}
-$$
+$d_{\text{ori\_rel}} = 2\pi - d_{\text{ori\_rel}}$
 
 $$
 d_{\text{ori\_rel}} = (d_{\text{ori\_rel}} + 2\pi \big) \bmod 2\pi
