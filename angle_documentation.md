@@ -44,23 +44,23 @@ For simplicity we will focus here on 1 fish and 1 stimulus and therefore denotes
 
 We want to compute the orientation of stimulus d_ori : The naive formula
 $$
-d_{\text{ori}} = \arctan\left(\frac{d_{y}}{d_{x}}\right)
+d_{\text{ori}} = \text{arctan}\left(\frac{d_{y}}{d_{x}}\right)
 $$
 is incorrect for our use case, because the standard arctangent (arctan) only works in one quadrant at a time.
 It ignores the sign of both coordinates, which leads to wrong angles when the stimulus is in the top-right or bottom-right quadrants.
 
-We instead use the two-argument function atan2(y, x), which handles the signs correctly and returns the full directional angle of the vector:
+We instead use the two-argument function arctan2(y, x), which handles the signs correctly and returns the full directional angle of the vector:
 
 $$
-d_{\text{ori}} = \text{arctan2}\left(d_{y},, d_{x}\right)
+d_{\text{ori}} = \text{arctan2}\left(d_{y}, d_{x}\right)
 $$
 
-However, arctan2 returns an angle in the range $(-\pi,\, \pi]$.
+However, arctan2 returns an angle in the range $(-\pi, \pi]$.
 Since fish orientations $(f_{\text{ori}})$ are defined between 0 and $2\pi$,
 we convert our stimulus orientation to the same range using:
 
 $$
-d_{\text{ori}} = \big(\text{arctan2}(d_{y},, d_{x}) + 2\pi \big) \bmod 2\pi
+d_{\text{ori}} = \big(\text{arctan2}(d_{y}, d_{x}) + 2\pi \big) \bmod 2\pi
 $$
 
 This centers the reference frame on the fish.
@@ -143,6 +143,8 @@ r = np.sqrt(x**2 + y**2)
 This transformation ensures that every frame is represented  
 in a consistent egocentric coordinate system, allowing meaningful  
 comparison of fish–stimulus geometry across time.
+
+To check the results, one could make a density plot. Stimulus should appear only at the right/left of the fish.
 
 If the density plots still appear inconsistent (e.g. too flat or biased front/back),  
 the issue likely lies in:
