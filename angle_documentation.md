@@ -87,19 +87,23 @@ d_ori = (d_ori - np.pi) % (2*np.pi)
 
 #### <center>  Figure 3 : Experiment centered on fish with d_ori measured from same baseline than f_ori
 <p align="center">
-  <img src="images/fig_4_xdori_inversed.jpeg" alt="Overlay of fish and stimuli trajectories" width="700"/>
+  <img src="images/fig_4_xdori_inversed.jpeg" alt="images/fig_4_xdori_inversed.jpeg" width="700"/>
 </p>
 
 Here
 
-\( d_{\text{ori\_rel}} = d_{\text{ori}} - f_{\text{ori}} \)
+$$
+d_{\text{ori,rel}} = d_{\text{ori}} - f_{\text{ori}}
+$$
 
 We want $d_{ori,\text{rel}}$ to be between 0 and $2\pi$, and increasing in the trigonometric sens to respect standard polar coordinates norm.
 
-$d_{\text{ori\_rel}} = 2\pi - d_{\text{ori\_rel}}$
+$$
+d_{\text{ori,rel}} = 2\pi - d_{\text{ori,rel}}
+$$
 
 $$
-d_{\text{ori\_rel}} = (d_{\text{ori\_rel}} + 2\pi \big) \bmod 2\pi
+d_{\text{ori,rel}} = (d_{\text{ori,rel}} + 2\pi \big) \bmod 2\pi
 $$
 
 Then we can compute radius and we have our 2 coordinates of the egocentric polar coordinates system.
