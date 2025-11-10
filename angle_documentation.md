@@ -87,7 +87,7 @@ d_ori = (d_ori - np.pi) % (2*np.pi)
 
 #### <center>  Figure 3 : Experiment centered on fish with d_ori measured from same baseline than f_ori
 <p align="center">
-  <img src="images/fig_4_xdori_inversed.jpeg" alt="images/fig_4_xdori_inversed.jpeg" width="700"/>
+  <img src="images/fig_4_x_inversed.jpeg" alt="images/fig_4_xdori_inversed.jpeg" width="700"/>
 </p>
 
 Here
