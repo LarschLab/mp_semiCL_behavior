@@ -25,7 +25,6 @@ The fish orientation is measured in radians, increasing clockwise, with 0 corres
   - activity flag `dₖ_stim` (0 / "none" means no stimulus)
 Dot coordinates in millimeters, relative to the fish centroid, Left side → positive x values
 
-There are typically 8 stimuli (`d0`–`d7`) and 15 fish (`f0`–`f14`).
 
 There are typically 8 stimuli (`d0`–`d7`) and 15 fish (`f0`–`f14`).
 
@@ -44,7 +43,7 @@ For simplicity we will focus here on 1 fish and 1 stimulus and therefore denotes
 
 We want to compute the orientation of stimulus d_ori : The naive formula
 $$
-d_{\text{ori}} = \text{arctan}\left(\frac{d_{y}}{d_{x}}\right)
+d_{\text{ori}} = \text{arctan}\left(d_{y}, d_{x}\right)
 $$
 is incorrect for our use case, because the standard arctangent (arctan) only works in one quadrant at a time.
 It ignores the sign of both coordinates, which leads to wrong angles when the stimulus is in the top-right or bottom-right quadrants.
