@@ -13,6 +13,8 @@ This document explains how global (world-centered) coordinates of fish and stimu
 
 ## Input Data
 
+We start with the dataset preprocessed_data.csv extracted from AllFish_GsizeMotionSingle.ipynb
+
 Each frame of the dataset contains:
 - For each fish *fₙ*:  
   - position `(fₙ_x, fₙ_y)`  
@@ -70,7 +72,7 @@ d_ori = (np.arctan2(dy, dx) + 2*np.pi) % (2*np.pi)
 
 #### <center> Figure 2 – Experiment centered on fish 
 <p align="center">
-  <img src="fig_2_x_inversed.jpeg" alt="Overlay of fish and stimuli trajectories" width="700"/>
+  <img src="images/fig_2_x_inversed.jpeg" alt="Overlay of fish and stimuli trajectories" width="700"/>
 </p>
 
 Now, we want to simplify the next computations by setting the same baseline for the 2 angles. For this we will measure $d_{\text{ori}}$ from the right of the x axis. To do this if  $d_{ori} < \pi$ therefore $d_{ori} = d_{ori} + \pi$, and if $d_{ori} >= \pi$ therefore $d_{ori} = d_{ori} -\pi$.
@@ -85,7 +87,7 @@ d_ori = (d_ori - np.pi) % (2*np.pi)
 
 #### <center>  Figure 3 : Experiment centered on fish with d_ori measured from same baseline than f_ori
 <p align="center">
-  <img src="fig_4_xdori_inversed.jpeg" alt="Overlay of fish and stimuli trajectories" width="700"/>
+  <img src="images/fig_4_xdori_inversed.jpeg" alt="Overlay of fish and stimuli trajectories" width="700"/>
 </p>
 
 Here
@@ -121,7 +123,7 @@ r = np.sqrt(x**2 + y**2)
 
 #### <center>  Figure 4 : Experiment in egocentric polar coordinates
 <p align="center">
-  <img src="fig_3.jpeg" alt="Overlay of fish and stimuli trajectories" width="700"/>
+  <img src="images/fig_3.jpeg" alt="Overlay of fish and stimuli trajectories" width="700"/>
 </p>
 
 ---
