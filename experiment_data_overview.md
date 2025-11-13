@@ -5,7 +5,7 @@
 This experiment investigates zebrafish behavior in response to visual stimuli consisting of groups of dots.  
 Each fish swims freely inside a Petri dish of **10 cm diameter** while being recorded at **30 frames per second**.
 
-At specific time points defined by the *trajectory file*, groups of dots appear either on the left or right side of each fish.  
+At specific time points defined by the *stimuli trajectory file*, groups of dots appear either on the left or right side of each fish.  
 The dots move within a **2.5 × 2.5 cm** area and maintain a **minimum distance of 0.5 cm** from the fish center.
 
 Stimuli vary in:
@@ -20,6 +20,21 @@ Each stimulus presentation lasts **60 seconds**, followed by a **50-second pause
 
 ---
 
+**Files referenced in this dataset:**
+- **ROI file** — `ROIdef2025-02-20T12_09_16.csv` loaded as 'roi_df' in the AllFish_GsizeMotionSingle notebook.  
+  Contains the geometric information for each Petri dish (dish center, radius, projector offsets).  
+  This file is used to correctly project visual stimuli onto each dish.
+- **Fish position file** `PositionTxt_allROI2025-02-20T15_37_59.csv` loaded as 'df' in the AllFish_GsizeMotionSingle notebook.  
+  This file is the output of the tracking system. It contains x,y and orientation of each fish across the entire experiment duration. 
+- **Stimuli trajectory file** `2025.02.20-0957_trajectory_GsizeMotionSingle_180min.csv` loaded as 'stimuli_df' in the AllFish_GsizeMotionSingle notebook.  
+  This file defines the stimuli trajectory, with dot positions expressed in millimeters relative to the fish’s centroid at stimulus onset.  
+  To obtain the actual stimulus position seen by each fish, these relative coordinates must be transformed using the corresponding fish position and orientation from the PositionTxt file. Because each fish has a different trajectory, each one ends up with a different “real” stimulus path.
+
+#### ⚠️ Warning  
+Do not use the stimulus-related columns in the PositionTxt File. These values DO NOT correspond to the real stimulus position and must be ignore. **Stimuli positions** should be retrieved only from **stimuli trajectory file**!
+
+---
+
 ## PositionTxt File
 
 This file contains **fish positions**. 
@@ -31,7 +46,7 @@ Each row represents one frame. Columns include the positions and orientations of
 | Stimulus data   | `x`, `y`, and `stimulus_name` for each dot (8 dots) |
 
 For analysis, **only the first 45 columns** (fish data) are relevant.  
-Stimulus positions should be retrieved from the trajectory file and transformed relative to the fish position at the start of each trial. 
+Stimulus positions should be retrieved from the stimuli trajectory file and transformed relative to the fish position at the start of each trial. 
 
 Coordinate system details:
 - **Fish positions (`x`, `y`)** are in *absolute pixel coordinates*.  
@@ -58,6 +73,7 @@ Coordinate conventions:
 - Left side → **positive x values**  
 - Right side → **negative x values**  
   (This convention originates from the Bonsai stimulus generation code.)
+
 
 #### Stimulus Naming Convention
 
@@ -86,10 +102,3 @@ Columns include spatial and geometric parameters:
 | `radius` | Radius of the dish |
 
 These parameters define the position of each dish on the projection screen and are used to align the visual stimulus with the corresponding fish.
-
----
-
-**Files referenced in this dataset:**
-- `ROIdef2025-02-20T12_09_16.csv` — ROI definitions  
-- `PositionTxt_allROI2025-02-20T15_37_59.csv` — Fish tracking data  
-- `2025.02.20-0957_trajectory_GsizeMotionSingle_180min.csv` — Stimulus trajectory definitions
