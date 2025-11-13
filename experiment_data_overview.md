@@ -1,104 +1,125 @@
 # Experiment Data Overview
 
-## Experiment Description
+**Recommended dataset for analysis:**  
+Use the **Transformed Fish and Stimuli File** as your main reference.  
+This file already contains stimuli transformed into the same coordinate system as the fish data, aligned per trial and per fish.  
 
-This experiment investigates zebrafish behavior in response to visual stimuli consisting of groups of dots.  
-Each fish swims freely inside a Petri dish of **10 cm diameter** while being recorded at **30 frames per second**.
+The remaining files are documented so you can understand how this transformed dataset is produced:  
+where each variable originates, how coordinate conversions work, and how different pieces link together.
 
-At specific time points defined by the *stimuli trajectory file*, groups of dots appear either on the left or right side of each fish.  
-The dots move within a **2.5 × 2.5 cm** area and maintain a **minimum distance of 0.5 cm** from the fish center.
+---
 
-Stimuli vary in:
+## 1. Experiment Description
+
+This experiment examines how zebrafish respond to visual stimuli composed of groups of dots—either static or moving.  
+Each fish swims freely inside a **10 cm diameter** dish while being tracked at **30 frames per second**.
+
+At specific time points defined by the **Stimuli Trajectory File**, dots appear either on the left or the right of each fish.  
+Dots move inside a **2.5 × 2.5 cm** region and always maintain at least **0.5 cm** distance from the fish’s center.
+
+Stimulus properties:
+
 - **Group size:** 2, 4, 6, or 8 dots  
-- **Speed:** 0 cm/s (static) or 3.5 cm/s (moving)  
+- **Speed:** 0 cm/s (static) or 3.5 cm/s (moving)
 
-Each trial presents **one stimulus**. The total experiment duration depends on the length of the trajectory file.  
-Each experiment includes **15 fish** recorded simultaneously.
+Each experiment includes:
+- **15 fish recorded simultaneously**  
+- **20 minutes of habituation** 
 
-Before stimulus onset, fish had an habituation period of **20 minutes** in the setup without visual stimulation.  
-Each stimulus presentation lasts **60 seconds**, followed by a **50-second pause** with no visual input.  
-
----
-
-**Files referenced in this dataset:**
-- **ROI file** — `ROIdef2025-02-20T12_09_16.csv` loaded as 'roi_df' in the AllFish_GsizeMotionSingle notebook.  
-  Contains the geometric information for each Petri dish (dish center, radius, projector offsets).  
-  This file is used to correctly project visual stimuli onto each dish.
-- **Fish position file** `PositionTxt_allROI2025-02-20T15_37_59.csv` loaded as 'df' in the AllFish_GsizeMotionSingle notebook.  
-  This file is the output of the tracking system. It contains x,y and orientation of each fish across the entire experiment duration. 
-- **Stimuli trajectory file** `2025.02.20-0957_trajectory_GsizeMotionSingle_180min.csv` loaded as 'stimuli_df' in the AllFish_GsizeMotionSingle notebook.  
-  This file defines the stimuli trajectory, with dot positions expressed in millimeters relative to the fish’s centroid at stimulus onset.  
-  To obtain the actual stimulus position seen by each fish, these relative coordinates must be transformed using the corresponding fish position and orientation from the PositionTxt file. Because each fish has a different trajectory, each one ends up with a different “real” stimulus path.
-
-#### ⚠️ Warning  
-Do not use the stimulus-related columns in the PositionTxt File. These values DO NOT correspond to the real stimulus position and must be ignore. **Stimuli positions** should be retrieved only from **stimuli trajectory file**!
+Each stimulus lasts **60 seconds**, followed by a **50-second interstimulus pause** with a white background. Every stimulus condition (e.g. 3 dots static left) are repeated across multiple trials, but the specific dot trajectories are newly generated each time.
 
 ---
 
-## PositionTxt File
+## 2. Transformed Fish and Stimuli File
+**`2025.02.20_GsizeMotionSingle_f0_transformed_abs`**
 
-This file contains **fish positions**. 
-Each row represents one frame. Columns include the positions and orientations of all fish, as well as stimulus information.
+It contains the **actual, absolute positions of all dots** for every frame and every fish, fully transformed in the same coordinate system. The trajectory file provides dot positions *relative to each fish at stimulus onset*.  
+Since each fish moves differently across a trial, these coordinates must be transformed into absolute coordinates using each fish’s position and orientation at each stimulus starting frame.
 
-| Column Content | Description |
-|-----------------|--------------|
-| Fish positions  | `x`, `y`, and `orientation` for each fish (15 fish × 3 columns = 45 columns total) |
-| Stimulus data   | `x`, `y`, and `stimulus_name` for each dot (8 dots) |
+Content:
+- `frame` — frame index (30 fps)
+- `stimulus` - stimulus diplayed at that frame
+- `fX_x`, `fX_y`, `fX_ori` — fish centroid and orientation
+- `dX_x`, `dX_y` `dX_stim`— absolute position of each dot and stimulus name.  
 
-For analysis, **only the first 45 columns** (fish data) are relevant.  
-Stimulus positions should be retrieved from the stimuli trajectory file and transformed relative to the fish position at the start of each trial. 
+The maximum number of dots that can be displayed can be 8, but smaller group sizes are also showed. When dotX_stim has value 'none', that dot is not being shown. E.g. if the are two dots on the right, then dot0 and dot1 will have useful values, all the other stimuli columns values should be ignored.
 
-Coordinate system details:
-- **Fish positions (`x`, `y`)** are in *absolute pixel coordinates*.  
-- The origin (0,0) is at the **top-left corner**.  
-- **Orientation** values are in *radians*, measured *clockwise*.
+Stimulus naming convention example: `CLsemi1800_g0-2_s3.5-3.5`
 
----
+- `CLsemi` — semi–closed-loop (stimuli positioned relative to fish only at onset)  
+- `g0-2` — 0 dots left, 2 dots right  
+- `s3.5-3.5` — right-side stimulus moves at 3.5 cm/s
 
-## Trajectory File
-This file defines the stimulus positions and is the one read by our Bonsai pipeline to generate the visual stimuli in the virtual reality setup using a semi-closed loop configuration.
+During pauses, the name is `inter_stim_pause`.
 
-Each row corresponds to one frame.  
-Columns include stimulus properties:
-
-| Column | Description |
-|---------|--------------|
-| `name` | Stimulus name (e.g., `CLsemi1800_g0-2_s3.5-3.5`) |
-| `x`, `y` | Dot coordinates in **millimeters**, relative to the fish centroid |
-| `size` | Dot size |
-| `color` | Dot color |
-| `background_color` | Background color |
-
-Coordinate conventions:
-- Left side → **positive x values**  
-- Right side → **negative x values**  
-  (This convention originates from the Bonsai stimulus generation code.)
-
-
-#### Stimulus Naming Convention
-
-Example: `CLsemi1800_g0-2_s3.5-3.5`
-
-| Component | Meaning |
-|------------|----------|
-| `CLsemi` | Semiclosed-loop experiment — dots appear relative to the fish position at onset and remain fixed thereafter |
-| `g0-2` | Group configuration — 0 dots on the left, 2 dots on the right |
-| `s3.5-3.5` | Speed configuration — 3.5 cm/s for the right-side stimulus (values can be 0 or 3.5) |
-
-When no stimulus is presented, the `name` column contains the value **`none`**.
+Coordinates:
+- Fish and dots coordinates are in **pixels**. Fish move in a dish of around 350-80 px (see ROI file).
+- Origin at **bottom-left**
+- Orientation measured in **counterclockwise radians**
 
 ---
 
-## ROI File
+## 3. Fish Position File
+**`PositionTxt_allROI2025-02-20T15_37_59.csv`**
 
-Each row corresponds to a Petri dish (one fish).  
-Columns include spatial and geometric parameters:
+This file contains the **tracked positions of all 15 fish** across the full experiment. It is the output of Bonsai tracking during the experiment.
 
-| Column | Description |
-|---------|-------------|
-| `xoff`, `yoff` | Offset coordinates in projector screen pixels (origin at top-left) |
-| `diameter` | Diameter of the Petri dish |
-| `x`, `y` | Dish center coordinates |
-| `radius` | Radius of the dish |
+Content:
+- For each frame:  
+  - `x`, `y`, and `orientation` for each fish (45 columns total)
+  - `x`, `y`, and `name` for each dot. (24 columns total as there are 8 max dots across the experiment) 
 
-These parameters define the position of each dish on the projection screen and are used to align the visual stimulus with the corresponding fish.
+  ⚠️ The stimulus columns in this file should be ignored.  
+These values are *not* meaningful for this experiment and should be ignored.  
+Use the **trajectory file** or the **transformed file** for valid stimulus positions.
+
+Coordinates:
+- Fish coordinates are in **pixels**. Fish move in a dish of around 350-80 px.
+- Origin at **top-left**
+- Orientation measured in **clockwise radians**
+
+---
+
+## 4. Stimuli Trajectory File  
+**`2025.02.20-0957_trajectory_GsizeMotionSingle_180min.csv`**
+
+This file defines the desired **stimulus trajectories** and is directly read by the **Bonsai pipeline** to generate visual stimuli in our semi–closed-loop virtual reality system. These trajectories represent the *intended* dot positions, which are then displayed relative to the fish’s location at specific time points.
+
+Content:
+- One row per frame  
+- For each dot:  
+  `name`, `x`, `y`, `size`, `color`, `background_color`
+  There are 8 dots, so 48 columns in total. 
+
+Naming convention example: `CLsemi1800_g0-2_s3.5-3.5`
+
+- `CLsemi` — semi–closed-loop (stimuli positioned relative to fish only at onset)  
+- `g0-2` — 0 dots left, 2 dots right  
+- `s3.5-3.5` — right-side stimulus moves at 3.5 cm/s
+
+During pauses, the name is `inter_stim_pause`.
+
+Coordinates:
+- Expressed in **millimeters**, relative to the fish centroid at stimulus onset  
+- Positive x → stimulus appears on the **left**  
+- Negative x → stimulus appears on the **right**
+
+---
+
+## 5. ROI File
+**`ROIdef2025-02-20T12_09_16.csv`**
+
+Each row corresponds to one of the 15 Petri dishes.  
+This file supplies the geometric information needed to project stimuli accurately onto each dish.
+
+Content:
+- `xoff`, `yoff` — projector offset 
+- `diameter` — dish diameter  
+- `x`, `y` — center position on projector  
+- `radius` — dish radius
+
+Coordinates:
+- Values are in **pixels**
+- Origin at **top-left**
+
+These parameters are used when transforming the relative stimulus coordinates into absolute coordinates.
