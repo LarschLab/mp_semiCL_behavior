@@ -20,7 +20,7 @@ stimuli_df = ...
 position_df = ...
 roi_df = ...
 
-tdp.generate_transformed_datasets(stimuli_df, df, roi_df)
+results = tdp.generate_transformed_datasets(stimuli_df, df, roi_df)
 
 abs_dict = results["absolute"]  # absolute (screen) coordinates
 polar_dict = result["polar"]    # fish-centered polar coordinates
@@ -28,9 +28,9 @@ polar_dict = result["polar"]    # fish-centered polar coordinates
 ```
 
 Both abs_dict and polar_dict are dictionaries indexed by fish ID:
-	•	abs_dict["f0"] → DataFrame for fish 0
-	•	abs_dict["f10"] → DataFrame for fish 10
-	•	same structure for polar_dict
+ - abs_dict["f0"] → DataFrame for fish 0
+ - abs_dict["f10"] → DataFrame for fish 10
+ - 	same structure for polar_dict
 
 In abs_dict, fish and dots are in a common, absolute screen coordinate system (pixels, CCW orientation).
 In polar_dict, the fish is the origin and looks toward angle 0; each dot is described by (dX_angle, dX_radius) around the fish.
