@@ -23,7 +23,7 @@ roi_df = ...
 results = tdp.generate_transformed_datasets(stimuli_df, df, roi_df)
 
 abs_dict = results["absolute"]  # absolute (screen) coordinates
-polar_dict = result["polar"]    # fish-centered polar coordinates
+polar_dict = results["polar"]    # fish-centered polar coordinates
 
 ```
 
